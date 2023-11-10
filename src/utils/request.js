@@ -11,10 +11,10 @@ let downloadLoadingInstance;
 export let isRelogin = { show: false };
 
 axios.defaults.headers['Content-Type'] = 'application/json;charset=utf-8'
-// 创建axios实例
+// 创建axios实例 
 const service = axios.create({
   // axios中请求配置有baseURL选项，表示请求URL公共部分
-  baseURL: process.env.VUE_APP_BASE_API,
+  baseURL:process.env.NODE_ENV === "production" ? "/api/pda-api" : "/pda-server",
   // 超时
   timeout: 10000
 })
@@ -86,7 +86,7 @@ service.interceptors.response.use(res => {
         MessageBox.confirm('登录状态已过期，您可以继续留在该页面，或者重新登录', '系统提示', { confirmButtonText: '重新登录', cancelButtonText: '取消', type: 'warning' }).then(() => {
           isRelogin.show = false;
           store.dispatch('LogOut').then(() => {
-            location.href = '/index';
+            location.href = process.env.NODE_ENV === "production" ? "/pda-web/login" : "/login";
           })
       }).catch(() => {
         isRelogin.show = false;
